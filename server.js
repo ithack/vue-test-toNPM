@@ -15,15 +15,22 @@ var http = require("http"),
     vJson=JSON.parse(fs.readFileSync("config.json")),
     local_folders,
     header_url;
+function pathFn(){
+    var link='';
+    for(let i=0,len=arguments.length;i<len;i++){
+        link=path.join(link,arguments[i])
+    }
+    return link;
+}
 console.log(vJson.publish);
-local_folders = path.join(__dirname)+"\\dist\\"+vJson.publish// 本地路径，代理将在这个列表中的目录下寻找文件，如果没有找到则转到线上地址
-header_url = "E:\\project\\jd-worldwide-header"; // 公用头尾引用
+local_folders = pathFn(__dirname,'dist',vJson.publish)// 本地路径，代理将在这个列表中的目录下寻找文件，如果没有找到则转到线上地址
+header_url = path.resolve('../', 'jd-worldwide-header') ; // 公用头尾引用
 http.createServer(function (request,response){
     var req_url = request.url,
         fn,
         comboFile='';
     if(req_url.match(/\/(js|css|i)(\S*)*(.js|.css|.png|.ico|.jpg|.gif)/)){
-        fn=req_url.match(/\/(js|css|i)(\S*)*(.js|.css|.png|.ico|.jpg|.gif)/)[0].replace(/\/+/g,'\\');
+        fn=req_url.match(/\/(js|css|i)(\S*)*(.js|.css|.png|.ico|.jpg|.gif)/)[0];
     }else{
         console.log("失败："+req_url)
         response.writeHead(404);
@@ -36,7 +43,7 @@ http.createServer(function (request,response){
         val.split(',').map(function(item,i){
             if(i>0){
                 console.log(item)
-                item.indexOf('lib')==-1&&(item='\\js\\lib\\'+item)||(item='\\js\\'+item);
+                item.indexOf('lib')==-1&&(item=pathFn('/','js','lib',item))||(item=pathFn('/','js',item));
                 console.log(local_folders+item)
                 comboFile+=fs.readFileSync(local_folders+item,"UTF-8")
             }else{
