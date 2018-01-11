@@ -2,6 +2,7 @@
   1：mac下可能1024端口以下不让用；
   解决办法：可用sudo运行node server.js 试一下；如不行请关闭自带的apache服务；另本文件有待优化，把80端口映射转发到其他自定义端口，以便多个项目同时运行
   2：mac下读取文件有问题，可能是path或__dirname问题引起，读出来的当前根目录文件非项目根目录而是当前项目上一级目录，另需要确认在mac里是不是需要用/a/b的方式才能读取文件还是和win一样用\a\b的方式读取
+  解决办法：利用path的跨平台支持资料如下：http://www.ghostchina.com/writing-cross-platform-node-js/   (编写跨平台的 Node.js 代码)
 */
 /**
  * 2017/12/27
